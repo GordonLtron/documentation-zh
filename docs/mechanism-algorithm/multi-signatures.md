@@ -155,11 +155,15 @@ localwitness = [
 以上费用可通过提案调整。
 
 ## 接口与操作示例
-### 1. 修改权限操作流程
+### 1. 修改权限操作流程(SR 切换 witness)
 1. 使用 `getaccount` 查询当前账户权限结构；
-2. 构造新的权限配置；
-3. 调用 `AccountPermissionUpdateContract`；
-4. 签名并广播交易。
+2. 准备新的账号授予witness；
+3. 停止目前正在产块的SR节点；
+4. 使用 SR owner 账号修改多签权限，调用 `AccountPermissionUpdateContract`(100 trx)，将witness权限授予给新 witness 账号；
+5. SR 节点配置文件修改密钥为新 witness 账号私钥；
+6. 重新启动 SR 节点进行产块。
+
+注意! 一定要先停止目前正在产块的SR节点, 因为SR不能打包修改自己witness权限的交易，否则区块会验签失败，SR节点会被其他节点断开网络连接1小时作为惩罚。
 
 #### 示例请求：
 ```
